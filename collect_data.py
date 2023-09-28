@@ -8,8 +8,8 @@ DATA_PATH = "data/"
 # Initializing the Model
 mp_holistic = mp.solutions.holistic
 holistic_model = mp_holistic.Holistic(
-    min_detection_confidence=0.5,
-    min_tracking_confidence=0.5
+    min_detection_confidence=0.3,
+    min_tracking_confidence=0.3
 )
 
 print("loaded mp model")
@@ -21,7 +21,7 @@ capture = cv2.VideoCapture(1)
 
 for i in range(3):
     for j in range(20):
-      print(f"{i},{j}")
+      print(f"{i+1},{j+1}")
       while capture.isOpened():
           # capture frame by frame
           ret, frame = capture.read()
@@ -55,7 +55,6 @@ for i in range(3):
           # Enter key 'q' to break the loop
           if cv2.waitKey(1) & 0xFF == ord('q'):
               if (results.right_hand_landmarks):
-                cv2.imwrite(f"{DATA_PATH}{i}_{j}.png", image)
                 landmarks_list = []
                 for l in results.right_hand_landmarks.landmark:
                    landmarks_list.append(l.x)
@@ -64,6 +63,7 @@ for i in range(3):
                 landmarks_array = np.array(landmarks_list)
                 print(landmarks_array)
                 print(landmarks_array.shape)
+                np.save(f"{DATA_PATH}{i+1}_{j+1}.npy", landmarks_array)
                 break
  
 # When all the process is done
