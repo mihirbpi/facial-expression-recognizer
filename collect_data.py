@@ -3,13 +3,16 @@ import cv2
 import mediapipe as mp
 
 DATA_PATH = "data/"
+NUM_DATA_POINTS = 50 # number of data points to collect for each class
+NUM_CLASSES = 3
+CLASS_NAMES = ["happy", "sad", "angry"]
 
 # Grabbing the Holistic Model from Mediapipe and
 # Initializing the Model
 mp_holistic = mp.solutions.holistic
 holistic_model = mp_holistic.Holistic(
-    min_detection_confidence=0.3,
-    min_tracking_confidence=0.3
+    min_detection_confidence=0.5,
+    min_tracking_confidence=0.5
 )
 
 print("loaded mp model")
@@ -19,9 +22,11 @@ mp_drawing = mp.solutions.drawing_utils
 # (0) in VideoCapture is used to connect to your computer's default camera
 capture = cv2.VideoCapture(1)
 
-for i in range(3):
-    for j in range(20):
+for i in range(NUM_CLASSES):
+    
+    for j in range(NUM_DATA_POINTS):
       print(f"{i+1},{j+1}")
+
       while capture.isOpened():
           # capture frame by frame
           ret, frame = capture.read()
@@ -42,21 +47,22 @@ for i in range(3):
           # Converting back the RGB image to BGR
           image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
       
-          # Drawing Right hand Land Marks
+          # Drawing Face Land Marks
           mp_drawing.draw_landmarks(
             image,
-            results.right_hand_landmarks,
-            mp_holistic.HAND_CONNECTIONS
+            results.face_landmarks,
+            mp_holistic.FACEMESH_CONTOURS
           )
           
           # Display the resulting image
-          # cv2.namedWindow('Right Hand Landmarks', cv2.WINDOW_AUTOSIZE)
-          cv2.imshow("Right Hand Landmarks", image)
-          # Enter key 'q' to break the loop
-          if cv2.waitKey(1) & 0xFF == ord('q'):
-              if (results.right_hand_landmarks):
+          cv2.imshow("Face Landmarks", image)
+          # Enter key 's' to save the image
+          if cv2.waitKey(1) & 0xFF == ord('s'):
+              
+              if (results.face_landmarks):
                 landmarks_list = []
-                for l in results.right_hand_landmarks.landmark:
+
+                for l in results.face_landmarks.landmark:
                    landmarks_list.append(l.x)
                    landmarks_list.append(l.y)
                    landmarks_list.append(l.z)
@@ -66,7 +72,7 @@ for i in range(3):
                 np.save(f"{DATA_PATH}{i+1}_{j+1}.npy", landmarks_array)
                 break
  
-# When all the process is done
+# When the process is done
 # Release the capture and destroy all windows
 capture.release()
 cv2.destroyAllWindows()
