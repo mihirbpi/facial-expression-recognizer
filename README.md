@@ -1,2 +1,2 @@
 # facial-expression-recognizer
-Detecting facial expressions using OpenCV, MediaPipe Holistic, and PyTorch neural networks
+Detecting facial expressions with neural networks using OpenCV, MediaPipe Holistic, and PyTorch
