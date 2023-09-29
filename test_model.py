@@ -117,6 +117,7 @@ while capture.isOpened():
 
     # If key 'p' is pressed predict the facial expression
     if key == ord('p'):
+        
         if (results.face_landmarks):
             landmarks_list = []
 
