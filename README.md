@@ -1,2 +1,2 @@
-# hand-number-recognizer
-Detecting which number is shown on hand using neural network
+# facial-expression-recognizer
+Detecting facial expressions using neural network
